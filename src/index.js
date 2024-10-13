@@ -1,15 +1,15 @@
 import { fileURLToPath } from 'url';
 import { dirname, join, resolve } from 'path';
 import { chdir, cwd } from 'process';
-import { readdir, stat, rename, copyFile, unlink } from 'fs/promises';
+import { readdir, rename, copyFile, unlink } from 'fs/promises';
 import os from 'os';
 import readline from 'readline';
 import {getArchitecture, getCPUsInfo, getEOL, getHomeDirectory, getSystemUsername} from "./os.js";
 import {calculateFileHash} from "./calculateFileHash.js";
 import {compressFile, decompressFile} from "./zlib.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
 
 const username = process.argv.find(arg => arg.startsWith('--username='))?.split('=')[1] || 'noName';
 
