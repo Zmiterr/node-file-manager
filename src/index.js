@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'url';
 import { dirname, join, resolve } from 'path';
 import { chdir, cwd } from 'process';
-import { readdir, rename, copyFile, unlink } from 'fs/promises';
+import { readdir, rename, copyFile, unlink, readFile as fsReadFile } from 'fs/promises';
 import os from 'os';
 import readline from 'readline';
 import {getArchitecture, getCPUsInfo, getEOL, getHomeDirectory, getSystemUsername} from "./os.js";
@@ -181,7 +181,7 @@ async function listDirectory() {
 async function readFile(filePath) {
     try {
         const fullPath = resolve(cwd(), filePath);
-        const data = await readFile(fullPath, 'utf-8');
+        const data = await fsReadFile(fullPath, 'utf-8');
         console.log(data);
     } catch (err) {
         console.log('Operation failed');
