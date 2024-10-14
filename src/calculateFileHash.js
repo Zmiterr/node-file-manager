@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import crypto from 'node:crypto';
+import {consoleColors as colors} from "./consoleColors.js";
 
 export const calculateFileHash = (filePath) => {
     return new Promise((resolve, reject) => {
@@ -12,12 +13,12 @@ export const calculateFileHash = (filePath) => {
 
         stream.on('end', () => {
             const result = hash.digest('hex');
-            console.log(`Hash of the file: ${result}`);
+            console.log(`${colors.cyan}Hash of the file: ${result}${colors.reset}`);
             resolve(result);
         });
 
         stream.on('error', (error) => {
-            console.log('Operation failed');
+            console.log(`${colors.red}Operation failed: ${error.message}${colors.reset}`);
             reject(error);
         });
     });
