@@ -1,6 +1,12 @@
 
 # List of Commands to Test File Manager Functionality
 
+### NOTE: use double quotes for name more than one word 
+_Example:_
+  ```bash
+  cd "./one two three"
+  ```
+
 ## 1. Navigation & Working Directory (nwd)
 - **Go up one level**
   ```bash

@@ -12,13 +12,12 @@ import {
     renameFile
 } from "./fileSystem.js";
 
-
-
-
 export const handleCommand = async (input) => {
-    const [command, ...args] = input.split(' ');
-    switch (command) {
+    const regex = /(?:[^\s"]+|"([^"]*)")+/g;
+    const args = input.match(regex).map(arg => arg.replace(/^"|"$/g, ''));
+    const command = args.shift();
 
+    switch (command) {
         case '.exit':
             rl.close();
             break;
@@ -138,3 +137,4 @@ export const handleCommand = async (input) => {
     }
     console.log(`You are currently in ${cwd()}`);
 };
+
