@@ -1,15 +1,19 @@
-import { fileURLToPath } from 'url';
-import { dirname, join, resolve } from 'path';
 import { chdir, cwd } from 'process';
-import { readdir, rename, copyFile, unlink, readFile as fsReadFile } from 'fs/promises';
 import os from 'os';
 import readline from 'readline';
 import {getArchitecture, getCPUsInfo, getEOL, getHomeDirectory, getSystemUsername} from "./os.js";
 import {calculateFileHash} from "./calculateFileHash.js";
 import {compressFile, decompressFile} from "./zlib.js";
+import {
+    addFile,
+    changeDirectory,
+    copyFileToDestination, goUp,
+    listDirectory,
+    moveFile,
+    readFile, removeFile,
+    renameFile
+} from "./fileSystem.js";
 
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = dirname(__filename);
 
 const username = process.argv.find(arg => arg.startsWith('--username='))?.split('=')[1] || 'noName';
 
@@ -143,97 +147,7 @@ const handleCommand = async (input) => {
     console.log(`You are currently in ${cwd()}`);
 };
 
-function goUp() {
-    const currentDir = cwd();
-    const parentDir = dirname(currentDir);
-    if (currentDir !== parentDir) {
-        chdir(parentDir);
-    }
-}
 
-function changeDirectory(newPath) {
-    try {
-        const resolvedPath = resolve(cwd(), newPath);
-        chdir(resolvedPath);
-    } catch (err) {
-        console.log('Operation failed');
-    }
-}
-
-async function listDirectory() {
-    try {
-        const files = await readdir(cwd(), { withFileTypes: true });
-        const folders = files.filter(file => file.isDirectory()).map(dir => dir.name);
-        const fileNames = files.filter(file => file.isFile()).map(file => file.name);
-
-        folders.sort();
-        fileNames.sort();
-
-        console.log('Folders:');
-        folders.forEach(name => console.log(name));
-        console.log('Files:');
-        fileNames.forEach(name => console.log(name));
-    } catch (err) {
-        console.log('Operation failed');
-    }
-}
-
-async function readFile(filePath) {
-    try {
-        const fullPath = resolve(cwd(), filePath);
-        const data = await fsReadFile(fullPath, 'utf-8');
-        console.log(data);
-    } catch (err) {
-        console.log('Operation failed');
-    }
-}
-
-async function addFile(fileName) {
-    try {
-        const fullPath = join(cwd(), fileName);
-        await writeFile(fullPath, '', { flag: 'wx' });
-    } catch (err) {
-        console.log('Operation failed');
-    }
-}
-
-async function renameFile(oldPath, newPath) {
-    try {
-        const resolvedOldPath = resolve(cwd(), oldPath);
-        const resolvedNewPath = resolve(cwd(), newPath);
-        await rename(resolvedOldPath, resolvedNewPath);
-    } catch (err) {
-        console.log('Operation failed');
-    }
-}
-
-async function copyFileToDestination(srcPath, destPath) {
-    try {
-        const resolvedSrc = resolve(cwd(), srcPath);
-        const resolvedDest = resolve(cwd(), destPath);
-        await copyFile(resolvedSrc, resolvedDest);
-    } catch (err) {
-        console.log('Operation failed');
-    }
-}
-
-async function moveFile(srcPath, destPath) {
-    try {
-        await copyFileToDestination(srcPath, destPath);
-        await removeFile(srcPath);
-    } catch (err) {
-        console.log('Operation failed');
-    }
-}
-
-async function removeFile(filePath) {
-    try {
-        const resolvedPath = resolve(cwd(), filePath);
-        await unlink(resolvedPath);
-    } catch (err) {
-        console.log('Operation failed');
-    }
-}
 
 const rl = readline.createInterface({
     input: process.stdin,
