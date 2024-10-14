@@ -12,7 +12,7 @@ import {
     renameFile
 } from "./fileSystem.js";
 
-export const handleCommand = async (input) => {
+export const handleCommand = async (input, rl) => {
     const regex = /(?:[^\s"]+|"([^"]*)")+/g;
     const args = input.match(regex).map(arg => arg.replace(/^"|"$/g, ''));
     const command = args.shift();

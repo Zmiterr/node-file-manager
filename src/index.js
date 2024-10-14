@@ -18,7 +18,7 @@ const rl = readline.createInterface({
 });
 
 rl.on('line', (line) => {
-    handleCommand(line.trim());
+    handleCommand(line.trim(), rl);
     rl.prompt();
 }).on('close', () => {
     logWarning(`Thank you for using File Manager, ${username} goodbye!`);
