@@ -1,7 +1,9 @@
 import { chdir, cwd } from 'node:process';
-import { dirname, join, resolve } from 'node:path';
-import { lstatSync } from 'node:fs';
-import fs from 'node:fs';
+import { pipeline } from 'node:stream/promises';
+import { rm } from 'node:fs/promises';
+import { dirname, join, resolve, isAbsolute, sep } from 'node:path';
+import { lstatSync, createReadStream, createWriteStream } from 'node:fs';
+import fs,  from 'node:fs';
 import { consoleColors as colors } from "./consoleColors.js";
 import {logError, logInfo, logSuccess} from "./colorLogger.js";
 
@@ -54,7 +56,7 @@ export const listDirectory = async () => {
 
 export const readFile = filePath => {
     const fullPath = resolve(cwd(), filePath);
-    const readStream = fs.createReadStream(fullPath, 'utf-8');
+    const readStream = createReadStream(fullPath, 'utf-8');
 
     readStream.on('data', chunk => {
         console.log(`File content:\n${chunk}`);
@@ -68,7 +70,7 @@ export const readFile = filePath => {
 export const addFile = async fileName => {
     try {
         const fullPath = join(cwd(), fileName);
-        const writeStream = fs.createWriteStream(fullPath, { flags: 'wx' });
+        const writeStream = createWriteStream(fullPath, { flags: 'wx' });
 
         writeStream.on('finish', () => {
             console.log(`File created: ${fullPath}`);
@@ -99,8 +101,8 @@ export const copyFileToDestination = (srcPath, destPath) => {
     const resolvedSrc = resolve(cwd(), srcPath);
     const resolvedDest = resolve(cwd(), destPath);
 
-    const readStream = fs.createReadStream(resolvedSrc);
-    const writeStream = fs.createWriteStream(resolvedDest);
+    const readStream = createReadStream(resolvedSrc);
+    const writeStream = createWriteStream(resolvedDest);
 
     readStream.pipe(writeStream);
 
@@ -128,11 +130,23 @@ export const removeFile = async filePath => {
 };
 
 export const moveFile = async (srcPath, destPath) => {
-    try {
-        copyFileToDestination(srcPath, destPath);
-        await removeFile(srcPath);
-        logSuccess(`Moved file from ${srcPath} to ${destPath}`);
+        if (!srcPath || !destPath) {
+            throw new Error('Invalid input. Please provide both source and destination paths.');
+        }
+
+        const targetPath = isAbsolute(srcPath) ? srcPath : join(process.cwd(), srcPath);
+        const destinationPath = isAbsolute(destPath) ? destPath : join(process.cwd(), destPath, sep + srcPath.split(sep).pop());
+
+        try {
+            const readable = createReadStream(targetPath);
+            const writable = createWriteStream(destinationPath);
+
+            await pipeline(readable, writable);
+
+            await rm(targetPath);
+
+            logSuccess(`Moved file from ${targetPath} to ${destinationPath}`)
     } catch (err) {
-        logError(`${colors.red}Operation failed: ${err.message}`);
+        logError(`Operation failed: ${err.message}`);
     }
 };
