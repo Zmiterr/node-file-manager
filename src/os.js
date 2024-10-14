@@ -1,4 +1,4 @@
-import os from 'os';
+import os from 'node:os';
 
 export const getEOL = () => {
     console.log(`System End-Of-Line: ${JSON.stringify(os.EOL)}`);

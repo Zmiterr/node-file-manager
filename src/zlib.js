@@ -1,5 +1,5 @@
-import fs from 'fs';
-import zlib from 'zlib';
+import fs from 'node:fs';
+import zlib from 'node:zlib';
 
 export const compressFile = (sourcePath, destinationPath) => {
     return new Promise((resolve, reject) => {

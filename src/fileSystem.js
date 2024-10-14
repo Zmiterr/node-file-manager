@@ -1,5 +1,5 @@
-import {chdir, cwd} from "process";
-import {dirname, join, resolve} from "path";
+import {chdir, cwd} from "node:process";
+import {dirname, join, resolve} from "node:path";
 import {copyFile, readdir, readFile as fsReadFile, rename, unlink, writeFile} from "fs/promises";
 
 export const goUp = () => {

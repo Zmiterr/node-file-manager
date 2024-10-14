@@ -1,6 +1,6 @@
-import { chdir, cwd } from 'process';
-import os from 'os';
-import readline from 'readline';
+import { chdir, cwd } from 'node:process';
+import os from 'node:os';
+import readline from 'node:readline';
 import {getArchitecture, getCPUsInfo, getEOL, getHomeDirectory, getSystemUsername} from "./os.js";
 import {calculateFileHash} from "./calculateFileHash.js";
 import {compressFile, decompressFile} from "./zlib.js";
