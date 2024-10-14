@@ -50,7 +50,7 @@
   ```
   _Example:_
   ```bash
-  cp ./test-folder/file.txt ./another-folder/
+  cp ./test-folder/file.txt ./another-folder/new-name.txt
   ```
 - **Move a file (same as copy but the original file is deleted)**
   ```bash
@@ -58,7 +58,7 @@
   ```
   _Example:_
   ```bash
-  mv ./test-folder/file.txt ./another-folder/
+  mv ./test-folder/file.txt ./another-folder/another-name.txt
   ```
 - **Delete a file**
   ```bash
