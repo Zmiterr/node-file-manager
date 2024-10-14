@@ -119,7 +119,7 @@ export const handleCommand = async (input) => {
                     console.log('Operation failed');
                 }
             } else {
-                console.log('Invalid input');
+                console.log('Invalid input. Usage: compress <path_to_file>');
             }
             break;
         case 'decompress':
@@ -130,7 +130,7 @@ export const handleCommand = async (input) => {
                     console.log('Operation failed');
                 }
             } else {
-                console.log('Invalid input');
+                console.log('Invalid input. Usage: decompress <path_to_file>');
             }
             break;
         default:
